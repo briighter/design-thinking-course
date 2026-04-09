@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
-import CourseApp from '../design-thinking-course.jsx'
-import WorkbookApp from './Workbook.jsx'
+import { ThemeContext } from './ThemeContext'
+import CourseApp from './components/course/CourseApp'
+import WorkbookApp from './components/workbook/WorkbookApp'
 
 export default function App() {
   const [mode, setMode] = useState(() => {
@@ -21,22 +22,17 @@ export default function App() {
   const toggleDark = () => setDark(d => !d)
 
   return (
-    <div style={{
-      filter: dark ? 'invert(1) hue-rotate(180deg)' : 'none',
-      minHeight: '100vh',
-    }}>
+    <ThemeContext.Provider value={{ dark }}>
       {mode === 'course'
         ? <CourseApp
             onWorkbook={() => setMode('workbook')}
-            dark={dark}
             onToggleDark={toggleDark}
           />
         : <WorkbookApp
             onCourse={() => setMode('course')}
-            dark={dark}
             onToggleDark={toggleDark}
           />
       }
-    </div>
+    </ThemeContext.Provider>
   )
 }
