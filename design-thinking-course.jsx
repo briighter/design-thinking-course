@@ -686,7 +686,7 @@ function HomePage({ onStart, onPhase, progress }) {
 }
 
 // ── Root App ──────────────────────────────────────────────────────────────
-export default function App() {
+export default function App({ onWorkbook = () => {}, dark = false, onToggleDark = () => {} }) {
   const [view, setView] = useState("home"); // "home" | number
   const [progress, setProgress] = useState(0);
 
@@ -698,6 +698,15 @@ export default function App() {
 
   const goHome = () => { setView("home"); window.scrollTo?.(0,0); };
 
+  const navBtnBase = {
+    display:"flex",alignItems:"center",gap:"4px",
+    padding:"5px 10px",borderRadius:"20px",
+    border:"2px solid #E8E4DC",background:"white",
+    fontFamily:"'Courier New',monospace",fontSize:"0.6rem",fontWeight:"bold",
+    letterSpacing:"0.05em",textTransform:"uppercase",
+    color:"#6B7280",cursor:"pointer",flexShrink:0,
+  };
+
   return (
     <div style={{maxWidth:"680px",margin:"0 auto",fontFamily:"Georgia,serif"}}>
       {/* Top nav */}
@@ -705,16 +714,26 @@ export default function App() {
         position:"sticky",top:0,zIndex:100,
         background:"white",borderBottom:"2px solid #F0EAD8",
         padding:"8px 16px",
-        display:"flex",alignItems:"center",gap:"6px",flexWrap:"wrap",
+        display:"flex",alignItems:"center",gap:"6px",
       }}>
         <button onClick={goHome} style={{
           fontFamily:"'Courier New',monospace",fontSize:"0.6rem",
           color:"#6B7280",background:"none",border:"none",cursor:"pointer",
-          marginRight:"4px",padding:"4px",
+          marginRight:"2px",padding:"4px",flexShrink:0,
         }}>◉</button>
-        {PHASES.map((p,i) => (
-          <PhaseChip key={i} phase={i} active={view===i} done={progress>i && view!==i} onClick={()=>goPhase(i)}/>
-        ))}
+        <div style={{display:"flex",alignItems:"center",gap:"6px",flexWrap:"wrap",flex:1}}>
+          {PHASES.map((p,i) => (
+            <PhaseChip key={i} phase={i} active={view===i} done={progress>i && view!==i} onClick={()=>goPhase(i)}/>
+          ))}
+        </div>
+        <div style={{display:"flex",alignItems:"center",gap:"4px",marginLeft:"6px"}}>
+          <button onClick={onToggleDark} style={{...navBtnBase,padding:"5px 8px",fontSize:"0.85rem"}}>
+            {dark ? "☀️" : "🌙"}
+          </button>
+          <button onClick={onWorkbook} style={navBtnBase}>
+            ✏️ <span>Workbook</span>
+          </button>
+        </div>
       </div>
 
       {view === "home"
